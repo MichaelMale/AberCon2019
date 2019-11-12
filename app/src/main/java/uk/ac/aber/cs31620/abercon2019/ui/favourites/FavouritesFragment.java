@@ -1,4 +1,4 @@
-package uk.ac.aber.cs31620.abercon2019.ui.whatson;
+package uk.ac.aber.cs31620.abercon2019.ui.favourites;
 
 
 import android.os.Bundle;
@@ -14,10 +14,10 @@ import uk.ac.aber.cs31620.abercon2019.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class WhatsOnFragment extends Fragment {
+public class FavouritesFragment extends Fragment {
 
 
-    public WhatsOnFragment() {
+    public FavouritesFragment() {
         // Required empty public constructor
     }
 
@@ -26,7 +26,7 @@ public class WhatsOnFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_whats_on, container, false);
+        return inflater.inflate(R.layout.fragment_favourites, container, false);
     }
 
 }

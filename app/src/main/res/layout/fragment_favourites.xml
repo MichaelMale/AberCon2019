@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.whatson.WhatsOnFragment">
+    tools:context=".ui.favourites.FavouritesFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello What's on Fragment" />
+        android:text="Favourites Fragment"
+        tools:ignore="HardcodedText" />
 
 </FrameLayout>

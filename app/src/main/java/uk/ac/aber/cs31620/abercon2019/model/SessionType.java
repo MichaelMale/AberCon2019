@@ -6,5 +6,5 @@ public enum SessionType {
     LUNCH,
     REGISTRATION,
     TALK,
-    WORKSHOP
+    WORKSHOP;
 }
