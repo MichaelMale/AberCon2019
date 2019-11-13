@@ -1,7 +1,8 @@
 package uk.ac.aber.cs31620.abercon2019.model;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -9,13 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Locale;
-
 import uk.ac.aber.cs31620.abercon2019.R;
+import uk.ac.aber.cs31620.abercon2019.ui.ViewEventDetailsActivity;
 
 public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.ViewHolder> {
 
@@ -40,13 +36,23 @@ public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-        CardView cardView = holder.cardView;
+        final CardView cardView = holder.cardView;
         TextView name = (TextView)cardView.findViewById(R.id.session_name);
         TextView date = (TextView)cardView.findViewById(R.id.session_date);
         name.setText(sessionNames[position]);
         date.setText(sessionDates[position]);
+
+        cardView.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(cardView.getContext(), ViewEventDetailsActivity.class);
+                intent.putExtra(ViewEventDetailsActivity.EXTRA_SESSION_ID, position);
+                cardView.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override

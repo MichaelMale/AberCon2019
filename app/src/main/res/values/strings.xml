@@ -28,4 +28,5 @@
     <string name="nav_favourites">Favourites</string>
     <string name="nav_speakers">Speakers</string>
     <string name="nav_contactus">Contact Us</string>
+    <string name="add_to_favourites">Add to favourites</string>
 </resources>

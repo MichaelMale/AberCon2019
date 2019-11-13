@@ -1,5 +1,7 @@
 package uk.ac.aber.cs31620.abercon2019.ui;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -7,15 +9,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.os.Bundle;
-
 import com.google.android.material.tabs.TabLayout;
 
 import uk.ac.aber.cs31620.abercon2019.R;
-import uk.ac.aber.cs31620.abercon2019.ui.home.HomeFragment;
-import uk.ac.aber.cs31620.abercon2019.ui.favourites.FavouritesFragment;
-import uk.ac.aber.cs31620.abercon2019.ui.speakers.SpeakersFragment;
 import uk.ac.aber.cs31620.abercon2019.ui.events.EventsFragment;
+import uk.ac.aber.cs31620.abercon2019.ui.favourites.FavouritesFragment;
+import uk.ac.aber.cs31620.abercon2019.ui.home.HomeFragment;
+import uk.ac.aber.cs31620.abercon2019.ui.speakers.SpeakersFragment;
 
 /**
  * The MainActivity method. This method controls the main part of the app and manages fragments.
@@ -34,8 +34,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Sets up the toolbar
-        Toolbar toolbar= findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle("AberCon 2019");
 
         // Sets up the ViewPager
         SectionsPagerAdapter pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());

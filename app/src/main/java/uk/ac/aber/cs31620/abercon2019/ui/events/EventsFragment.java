@@ -2,14 +2,13 @@ package uk.ac.aber.cs31620.abercon2019.ui.events;
 
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import uk.ac.aber.cs31620.abercon2019.R;
 import uk.ac.aber.cs31620.abercon2019.model.Session;
@@ -50,7 +49,7 @@ public class EventsFragment extends Fragment {
 
         SessionListAdapter adapter = new SessionListAdapter(eventNames, eventDates);
         eventsRecycler.setAdapter(adapter);
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 1);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         eventsRecycler.setLayoutManager(layoutManager);
 
         return sessions;
