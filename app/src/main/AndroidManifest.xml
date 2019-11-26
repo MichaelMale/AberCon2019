@@ -11,8 +11,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB08AE1eM3yKqd2WV2TgXVKl9FEzOQm6A0" />
+
         <activity
-            android:name=".ui.ViewEventDetailsActivity"
+            android:name=".ui.event_details.ViewEventDetailsActivity"
             android:parentActivityName=".ui.MainActivity" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>

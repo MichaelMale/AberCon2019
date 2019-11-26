@@ -4,10 +4,23 @@
     <string name="app_name">CynhadleddAber 2019</string>
     <string name="featured_speaker">Siaradwr dan sylw</string>
     <string name="hello_blank_fragment">Siwmae darn gwag</string>
-    <string name="home_tab">Hafan</string>
     <string name="intro_text">Croeso i Gynhadledd Aberystwyth 2019. Mae\'r ap hwn wedi\'i gynllunio i\'ch helpu chi i wybod beth sydd yn digwydd dros gyfnod y gynhadledd. Cymerwch gip ar ein gwahanol dabiau iso a cael blas ar y gynhadledd. Gobeithio y cewch chi amser braf yn Aberystwyth.</string>
     <string name="neil_taylor">Neil Taylor</string>
     <string name="welcome">Croeso</string>
     <string name="whatson_intro">Dyma restr o ddigwyddiadau sy\'n digwydd. Cliciwch ar bob eitem i gael mwy o fanylion neu i ychwanegu at eich ffefrynnau.</string>
-    <string name="whatson_tab">Beth sydd ymlaen?</string>
+    <string name="ok">Iawn</string>
+    <string name="speaker_formatted_string"><b>Siardwr:</b> %1$s</string>
+    <string name="time_formatted_string"><b>Amser:</b> %1$s s %2$s</string>
+    <string name="when_formatted_string"><b>Pryd:</b> %1$s</string>
+    <string name="where_formatted_string"><b>Ble:</b> %1$s</string>
+    <string name="nav_contactus">Cysylltwch</string>
+    <string name="nav_favourites">Ffefrynnau</string>
+    <string name="nav_header_image_description">Traethlin Aberystwyth</string>
+    <string name="nav_home">Hafan</string>
+    <string name="nav_speakers">Siardwyr</string>
+    <string name="nav_whatson">Digwyddiadau</string>
+    <string name="how_to_get_there">Sut i gyrraedd yno</string>
+    <string name="favourite_dialog_text">Bydd ychwanegu\'r digwyddiad hwn at eich ffefrynnau yn sicrhau ei fod ar gael i\'w weld yn y tab \'Ffefrynnau\', yn ogystal â\'ch atgoffa 15 munud cyn iddo ddechrau</string>
+    <string name="cancel">Canslo</string>
+    <string name="add_to_favourites">Ychwanegwch at ffefrynnau</string>
 </resources>

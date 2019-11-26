@@ -29,4 +29,17 @@
     <string name="nav_speakers">Speakers</string>
     <string name="nav_contactus">Contact Us</string>
     <string name="add_to_favourites">Add to favourites</string>
+    <string name="speaker_formatted_string"><b>Speaker:</b> %1$s</string>
+    <string name="when_formatted_string"><b>When:</b> %1$s</string>
+    <string name="time_formatted_string"><b>Time:</b> %1$s to %2$s</string>
+    <string name="where_formatted_string"><b>Where:</b> %1$s</string>
+    <string name="how_to_get_there">How to get there</string>
+    <string name="favourite_dialog_text">Adding this event to your favourites will make it available to be " +
+                        "viewed in the \'Favourites\' tab, as well as reminding you 15 minutes " +
+                        "before it begins</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="fave_info">Your favourites are listed here. Click on your favourites to find more information or remove them.</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
 </resources>

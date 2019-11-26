@@ -1,13 +1,23 @@
 package uk.ac.aber.cs31620.abercon2019.model;
 
-class Location {
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "locations")
+public class Building {
+
+    @NonNull
+    @PrimaryKey
     private String id;
+
     private String name;
-    private float latitude;
-    private float longitude;
+    private double latitude;
+    private double longitude;
     private String description;
 
-    public Location(String id, String name, float latitude, float longitude, String description) {
+    public Building(@NonNull String id, String name, double latitude, double longitude,
+                    String description) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
@@ -23,11 +33,11 @@ class Location {
         return name;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 

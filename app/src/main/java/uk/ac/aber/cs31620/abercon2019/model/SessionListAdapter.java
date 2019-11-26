@@ -11,7 +11,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import uk.ac.aber.cs31620.abercon2019.R;
-import uk.ac.aber.cs31620.abercon2019.ui.ViewEventDetailsActivity;
+import uk.ac.aber.cs31620.abercon2019.ui.event_details.ViewEventDetailsActivity;
 
 public class SessionListAdapter extends RecyclerView.Adapter<SessionListAdapter.ViewHolder> {
 

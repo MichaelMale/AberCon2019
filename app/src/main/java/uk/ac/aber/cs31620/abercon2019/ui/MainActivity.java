@@ -1,6 +1,8 @@
 package uk.ac.aber.cs31620.abercon2019.ui;
 
 import android.os.Bundle;
+import android.util.EventLog;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,7 +25,6 @@ import uk.ac.aber.cs31620.abercon2019.ui.speakers.SpeakersFragment;
  * @author Michael Male
  */
 public class MainActivity extends AppCompatActivity {
-
     /**
      * This method generates the required layouts as the app is created.
      * @param savedInstanceState Bundle containing any saved state.
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(pager);
     }
+
 
     /**
      * This class manages the correct fragment to be displayed as the user swipes through
