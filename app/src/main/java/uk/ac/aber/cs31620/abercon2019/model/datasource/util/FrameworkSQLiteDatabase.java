@@ -1,4 +1,4 @@
-package uk.ac.aber.cs31620.abercon2019.datasource.util;
+package uk.ac.aber.cs31620.abercon2019.model.datasource.util;
 /*
  * Copyright (C) 2016 The Android Open Source Project
  *
@@ -19,9 +19,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteCursor;
-import android.database.sqlite.SQLiteCursorDriver;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQuery;
 import android.database.sqlite.SQLiteTransactionListener;
 import android.os.Build;
 import android.os.CancellationSignal;
@@ -55,6 +53,10 @@ class FrameworkSQLiteDatabase implements SupportSQLiteDatabase {
     @SuppressWarnings("WeakerAccess")
     public FrameworkSQLiteDatabase(SQLiteDatabase delegate) {
         mDelegate = delegate;
+    }
+
+    private static boolean isEmpty(String input) {
+        return input == null || input.length() == 0;
     }
 
     @Override
@@ -153,15 +155,11 @@ class FrameworkSQLiteDatabase implements SupportSQLiteDatabase {
         return query(new SimpleSQLiteQuery(query, bindArgs));
     }
 
-
     @Override
     public Cursor query(final SupportSQLiteQuery supportQuery) {
-        return mDelegate.rawQueryWithFactory(new SQLiteDatabase.CursorFactory() {
-            @Override
-            public Cursor newCursor(SQLiteDatabase db, SQLiteCursorDriver masterQuery, String editTable, SQLiteQuery query) {
-                supportQuery.bindTo(new FrameworkSQLiteProgram(query));
-                return new SQLiteCursor(masterQuery, editTable, query);
-            }
+        return mDelegate.rawQueryWithFactory((db, masterQuery, editTable, query) -> {
+            supportQuery.bindTo(new FrameworkSQLiteProgram(query));
+            return new SQLiteCursor(masterQuery, editTable, query);
         }, supportQuery.getSql(), EMPTY_STRING_ARRAY, null);
     }
 
@@ -169,12 +167,9 @@ class FrameworkSQLiteDatabase implements SupportSQLiteDatabase {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public Cursor query(final SupportSQLiteQuery supportQuery,
                         CancellationSignal cancellationSignal) {
-        return mDelegate.rawQueryWithFactory(new SQLiteDatabase.CursorFactory() {
-            @Override
-            public Cursor newCursor(SQLiteDatabase db, SQLiteCursorDriver masterQuery, String editTable, SQLiteQuery query) {
-                supportQuery.bindTo(new FrameworkSQLiteProgram(query));
-                return new SQLiteCursor(masterQuery, editTable, query);
-            }
+        return mDelegate.rawQueryWithFactory((db, masterQuery, editTable, query) -> {
+            supportQuery.bindTo(new FrameworkSQLiteProgram(query));
+            return new SQLiteCursor(masterQuery, editTable, query);
         }, supportQuery.getSql(), EMPTY_STRING_ARRAY, null, cancellationSignal);
     }
 
@@ -193,7 +188,6 @@ class FrameworkSQLiteDatabase implements SupportSQLiteDatabase {
         SimpleSQLiteQuery.bind(statement, whereArgs);
         return statement.executeUpdateDelete();
     }
-
 
     @Override
     public int update(String table, int conflictAlgorithm, ContentValues values, String whereClause,
@@ -309,9 +303,5 @@ class FrameworkSQLiteDatabase implements SupportSQLiteDatabase {
     @Override
     public void close() {
         mDelegate.close();
-    }
-
-    private static boolean isEmpty(String input) {
-        return input == null || input.length() == 0;
     }
 }

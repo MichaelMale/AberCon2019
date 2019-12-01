@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/speaker_card_view"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_margin="5dp"
-    app:cardElevation="2dp"
-    app:cardCornerRadius="4dp">
+    app:cardCornerRadius="4dp"
+    app:cardElevation="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,17 +16,17 @@
             android:id="@+id/speaker_card_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:contentDescription="@string/featured_speaker_name"
             android:src="@drawable/unknown"
-            android:contentDescription="@string/neil_taylor"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Space
             android:id="@+id/space"
             android:layout_width="15dp"
             android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/speaker_card_image" />
+            app:layout_constraintStart_toEndOf="@id/speaker_card_image"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/speaker_card_name"

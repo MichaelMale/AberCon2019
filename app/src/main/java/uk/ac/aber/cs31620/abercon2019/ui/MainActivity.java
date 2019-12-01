@@ -1,8 +1,6 @@
 package uk.ac.aber.cs31620.abercon2019.ui;
 
 import android.os.Bundle;
-import android.util.EventLog;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,7 +15,6 @@ import uk.ac.aber.cs31620.abercon2019.R;
 import uk.ac.aber.cs31620.abercon2019.ui.events.EventsFragment;
 import uk.ac.aber.cs31620.abercon2019.ui.favourites.FavouritesFragment;
 import uk.ac.aber.cs31620.abercon2019.ui.home.HomeFragment;
-import uk.ac.aber.cs31620.abercon2019.ui.speakers.SpeakersFragment;
 
 /**
  * The MainActivity method. This method controls the main part of the app and manages fragments.
@@ -27,6 +24,7 @@ import uk.ac.aber.cs31620.abercon2019.ui.speakers.SpeakersFragment;
 public class MainActivity extends AppCompatActivity {
     /**
      * This method generates the required layouts as the app is created.
+     *
      * @param savedInstanceState Bundle containing any saved state.
      */
     @Override
@@ -61,32 +59,37 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * Method containing a switch statement
+         *
          * @param position
          * @return
          */
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case 0: return new HomeFragment(); // HOME
-                case 1: return new EventsFragment(); // EVENTS
-                case 2: return new FavouritesFragment(); // FAVOURITES
-                case 3: return new SpeakersFragment(); // SPEAKERS
+                case 0:
+                    return new HomeFragment(); // HOME
+                case 1:
+                    return new EventsFragment(); // EVENTS
+                case 2:
+                    return new FavouritesFragment(); // FAVOURITES
             }
             return null;
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
 
         @Override
-        public CharSequence getPageTitle(int position){
-            switch(position) {
-                case 0: return getText(R.string.nav_home);
-                case 1: return getText(R.string.nav_whatson);
-                case 2: return getText(R.string.nav_favourites);
-                case 3: return getText(R.string.nav_speakers);
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return getText(R.string.nav_home);
+                case 1:
+                    return getText(R.string.nav_whatson);
+                case 2:
+                    return getText(R.string.nav_favourites);
             }
             return null;
         }

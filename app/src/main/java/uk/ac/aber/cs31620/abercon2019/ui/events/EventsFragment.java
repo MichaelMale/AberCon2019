@@ -2,6 +2,7 @@ package uk.ac.aber.cs31620.abercon2019.ui.events;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,72 +11,39 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.ListIterator;
+import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
-import java.util.Random;
+import java.util.Map;
 import java.util.Stack;
-import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import uk.ac.aber.cs31620.abercon2019.R;
+import uk.ac.aber.cs31620.abercon2019.model.EventsAdapter;
 import uk.ac.aber.cs31620.abercon2019.model.Session;
-import uk.ac.aber.cs31620.abercon2019.model.SessionListAdapter;
+import uk.ac.aber.cs31620.abercon2019.model.util.DateComparator;
+import uk.ac.aber.cs31620.abercon2019.model.viewmodels.SessionViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class EventsFragment extends Fragment {
-
-    private TreeMap<Date, Session[]> allSessions = new TreeMap<>();
-    private SimpleDateFormat testFormat = new SimpleDateFormat("EEE d MMM", Locale.UK);
+    // Global variables for use both in the onCreate, the Observer and the OnClickListener
     private Date currentDate = null;
-
-    private static final String CURRENT_DATE = "CD";
-    private static final String CURRENT_BACK_STACK = "CBS";
-    private static final String CURRENT_FORWARD_STACK = "CFS";
-
-    private Stack<Date> forwardStack = new Stack<>();
-    private Stack<Date> backStack = new Stack<>();
-
-    private TextView dateSelector = null;
+    private Map<Date, List<Session>> sessionsSortedByDate;
 
     public EventsFragment() {
         // Required empty public constructor
     }
 
-
-    /**
-     * A method to generate an object of type SessionListAdapter that populates a recycler view.
-     *
-     * @param toPopulate An array of type Session containing all Sessions that need to be
-     *                   populated into the recycler view.
-     * @return An object of type SessionListAdapter that binds a view holder to the given data.
-     * @see SessionListAdapter
-     */
-    private SessionListAdapter generateRecyclerAdapter(Session[] toPopulate) {
-        int len = toPopulate.length;
-
-        String[] eventNames = new String[len];
-        for (int i = 0; i < len; i++) {
-            eventNames[i] = toPopulate[i].getTitle();
-        }
-
-        String[] eventDates = new String[len];
-        for (int i = 0; i < len; i++) {
-            eventDates[i] = toPopulate[i].getTimeStart();
-        }
-
-
-        return new SessionListAdapter(eventNames, eventDates);
-    }
 
     /**
      * @param inflater           The LayoutInflater object that can be used to inflate
@@ -95,112 +63,96 @@ public class EventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View sessions = inflater.inflate(R.layout.fragment_events, container, false);
+        View view = inflater.inflate(R.layout.fragment_events, container, false);
         final RecyclerView eventsRecycler =
-                sessions.findViewById(R.id.short_session_recycler);
+                view.findViewById(R.id.short_session_recycler);
 
+        SessionViewModel sessionViewModel = ViewModelProviders.of(this)
+                .get(SessionViewModel.class);
 
-        /* TESTING DATA - Once you have successfully implemented the SQLite database this should
-        be removed. Obviously onCreateView is a bad place to put code like this, and like the
-        below to be honest.
+        LiveData<List<Session>> allSessions = sessionViewModel.getAllSessions();
+
+        final Stack<Date> forwardStack = new Stack<>();
+        final Stack<Date> backwardsStack = new Stack<>();
+
+        final SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM",
+                Locale.getDefault());
+
+        final TextView dateSelector = view.findViewById(R.id.date);
+
+        /*
+        Data doesn't persist when changing fragment or moving to a landscape orientation. Mildly
+        annoying, hardly the end of the world, though.
          */
-        Date testDate = new Date();
-        allSessions.put(testDate, Session.sessions);
-        allSessions.put(new Date(1000166400), Session.sessions2);
-        allSessions.put(new Date(864432000), Session.sessions3);
-        /* END OF TESTING DATA */
 
-        dateSelector = sessions.findViewById(R.id.date);
-        final LinkedList<Date> datesInDatabase = new LinkedList<>(allSessions.keySet());
-        if (currentDate == null) {
-            currentDate = datesInDatabase.getFirst();
-        }
-        dateSelector.setText(testFormat.format(currentDate));
+        allSessions.observe(this, sessions -> {
+            if (sessions != null && !sessions.isEmpty()) {
+                // Moves list into map sorted and grouped by Date in ascending order
 
+                sessionsSortedByDate =
+                        sessions.stream().collect(Collectors.groupingBy(Session::getSessionDate,
+                                LinkedHashMap::new, Collectors.toList()));
 
-        if (forwardStack.empty()) {
-            forwardStack.addAll(datesInDatabase.subList(1, datesInDatabase.size())); // Initially add
-            // all dates into the forward stack bar the first one
-        }
+                LinkedList<Date> datesInDatabase = new LinkedList<>(sessionsSortedByDate.keySet());
+                currentDate = datesInDatabase.getFirst();
+                dateSelector.setText(format.format(currentDate));
 
-
-        eventsRecycler.setAdapter(generateRecyclerAdapter(Objects.requireNonNull
-                (allSessions.get(currentDate))));
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        eventsRecycler.setLayoutManager(layoutManager);
-
-        ImageButton backButton = sessions.findViewById(R.id.back_button);
-        backButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Date goingTo;
-                // If there are items on the back stack, pop the stack and change the current
-                // date to the returned value, then add the current date to the forward stack. If
-                // no items are on the back stack, then nothing happens.
-                if (!backStack.empty()) {
-                    goingTo = backStack.pop();
-                    forwardStack.push(currentDate);
-                    currentDate = goingTo;
-                    dateSelector.setText(testFormat.format(currentDate));
-                    SessionListAdapter adapter = generateRecyclerAdapter
-                            (Objects.requireNonNull(allSessions.get(currentDate)));
-                    eventsRecycler.swapAdapter(adapter, false);
-                } else {
-                    Toast.makeText(getContext(), "No previous entry", Toast.LENGTH_SHORT).show();
+                if (forwardStack.empty()) {
+                    forwardStack.addAll(datesInDatabase.subList(1, datesInDatabase.size()));
+                    forwardStack.sort(new DateComparator());
                 }
+
+                EventsAdapter adapter = new EventsAdapter(getContext(),
+                        sessionsSortedByDate.get(currentDate));
+                eventsRecycler.setAdapter(adapter);
+
+
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+                eventsRecycler.setLayoutManager(layoutManager);
+
+                ImageButton backButton = view.findViewById(R.id.back_button);
+                backButton.setOnClickListener(view1 -> {
+                    Date goingTo;
+                    if (!backwardsStack.empty()) {
+                        goingTo = backwardsStack.pop();
+                        forwardStack.push(currentDate);
+                        currentDate = goingTo;
+                        dateSelector.setText(format.format(currentDate));
+
+                        EventsAdapter newAdapter =
+                                new EventsAdapter(getContext(),
+                                        sessionsSortedByDate.get(currentDate));
+                        eventsRecycler.swapAdapter(newAdapter, false);
+                    } else {
+                        Toast.makeText(getContext(), "No previous date", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                ImageButton nextButton = view.findViewById(R.id.next_button);
+                nextButton.setOnClickListener(view1 -> {
+                    Date goingTo;
+
+                    if (!forwardStack.empty()) {
+                        goingTo = forwardStack.pop();
+                        backwardsStack.push(currentDate);
+                        currentDate = goingTo;
+                        dateSelector.setText(format.format(currentDate));
+
+                        EventsAdapter newAdapter =
+                                new EventsAdapter(getContext(),
+                                        sessionsSortedByDate.get(currentDate));
+                        eventsRecycler.swapAdapter(newAdapter, false);
+                    } else {
+                        Toast.makeText(getContext(), "No next date", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Log.e("NO_SESSIONS", "The session list passed to the observer in" +
+                        " EventsFragment is empty.");
             }
         });
 
-        ImageButton nextButton = sessions.findViewById(R.id.next_button);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Date goingTo;
-                // If there are items on the forward stack, pop the stack and change the current
-                // date to the returned value, then add the current date to the back stack. If no
-                // items are on the back stack, then nothing happens.
-                if (!forwardStack.empty()) {
-                    goingTo = forwardStack.pop();
-                    backStack.push(currentDate);
-                    currentDate = goingTo;
-                    dateSelector.setText(testFormat.format(currentDate));
-                    SessionListAdapter adapter = generateRecyclerAdapter
-                            (Objects.requireNonNull(allSessions.get(currentDate)));
-                    eventsRecycler.swapAdapter(adapter, false);
-                } else {
-                    Toast.makeText(getContext(), "No next entry", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        return sessions;
+        return view;
     }
-
-    /*
-    TODO: Make these methods retain the date that was selected before the screen was moved. The
-     below code was causing a NullPointerException but then you had to go to an Agile Development
-      class after having a shower so
-     */
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putSerializable(CURRENT_DATE, currentDate);
-//        outState.putSerializable(CURRENT_BACK_STACK, backStack);
-//        outState.putSerializable(CURRENT_FORWARD_STACK, forwardStack);
-//    }
-
-//    @Override
-//    @SuppressWarnings("unchecked")
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//
-//        if (savedInstanceState != null) {
-//            this.currentDate = (Date) savedInstanceState.getSerializable(CURRENT_DATE);
-//            this.backStack = (Stack) savedInstanceState.getSerializable(CURRENT_BACK_STACK);
-//            this.forwardStack = (Stack) savedInstanceState.getSerializable(CURRENT_FORWARD_STACK);
-//        }
-//    }
 
 }

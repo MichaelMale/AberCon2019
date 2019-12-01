@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Note: I don't speak Welsh, this is simply a demonstration of I18N internationalisation with Android. -->
+<?xml version="1.0" encoding="utf-8"?><!-- Note: I don't speak Welsh, this is simply a demonstration of I18N internationalisation with Android. -->
 <resources>
     <string name="app_name">CynhadleddAber 2019</string>
     <string name="featured_speaker">Siaradwr dan sylw</string>
     <string name="hello_blank_fragment">Siwmae darn gwag</string>
     <string name="intro_text">Croeso i Gynhadledd Aberystwyth 2019. Mae\'r ap hwn wedi\'i gynllunio i\'ch helpu chi i wybod beth sydd yn digwydd dros gyfnod y gynhadledd. Cymerwch gip ar ein gwahanol dabiau iso a cael blas ar y gynhadledd. Gobeithio y cewch chi amser braf yn Aberystwyth.</string>
-    <string name="neil_taylor">Neil Taylor</string>
+    <string name="featured_speaker_name">Neil Taylor</string>
     <string name="welcome">Croeso</string>
     <string name="whatson_intro">Dyma restr o ddigwyddiadau sy\'n digwydd. Cliciwch ar bob eitem i gael mwy o fanylion neu i ychwanegu at eich ffefrynnau.</string>
     <string name="ok">Iawn</string>

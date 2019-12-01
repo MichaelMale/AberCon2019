@@ -1,4 +1,4 @@
-package uk.ac.aber.cs31620.abercon2019.datasource.util;
+package uk.ac.aber.cs31620.abercon2019.model.datasource.util;
 /*
  * Copyright (C) 2011 readyState Software Ltd, 2007 The Android Open Source Project
  *

@@ -1,457 +1,159 @@
 package uk.ac.aber.cs31620.abercon2019.model;
 
-public class Session {
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
+import java.io.Serializable;
+import java.util.Date;
 
+import uk.ac.aber.cs31620.abercon2019.model.util.DateTimeConverter;
+import uk.ac.aber.cs31620.abercon2019.model.util.SessionTypeConverter;
+
+/**
+ * This is a temporary implementation of Session that transfers the database 'as-is', that is,
+ * without converting location id's to their respective locations. This will be changed hopefully
+ * but I just wanted to check if I could correctly migrate an SQLite database.
+ *
+ * @author Michael Male
+ * @version 0.1 ALPHA
+ */
+@Entity(tableName = "sessions")
+@TypeConverters({DateTimeConverter.class, SessionTypeConverter.class})
+public class Session implements Serializable {
+
+    @NonNull
+    @PrimaryKey
     private String id;
     private String title;
     private String content;
-    private Building buildingId;
-    private String sessionDate;
+    private String locationId;
+    private Date sessionDate;
     private int sessionOrder;
     private String timeStart;
     private String timeEnd;
     private SessionType sessionType;
-    private Speaker speaker;
+    private String speakerId;
 
-    public Session(String id, String title, String content, Building buildingId, String sessionDate,
+    /**
+     * Constructor for objects of class Session.
+     *
+     * @param id           The session ID
+     * @param title        The title of the session
+     * @param content      The session's content
+     * @param locationId   The location ID
+     * @param sessionDate  The date that the session is to be held
+     * @param sessionOrder The order that the session should be in
+     * @param timeStart    The time that the session is beginning
+     * @param timeEnd      The time that the session is concluding
+     * @param sessionType  The type of session that is being held
+     * @param speakerId    The session's speaker ID
+     */
+    public Session(String id, String title, String content, String locationId, Date sessionDate,
                    int sessionOrder, String timeStart, String timeEnd, SessionType sessionType,
-                   Speaker speaker) {
+                   String speakerId) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.buildingId = buildingId;
+        this.locationId = locationId;
         this.sessionDate = sessionDate;
         this.sessionOrder = sessionOrder;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
         this.sessionType = sessionType;
-        this.speaker = speaker;
+        this.speakerId = speakerId;
     }
 
-    // DELETE THE CODE BLOCK BELOW BEFORE SUBMISSION
-    private static Building physMain = new Building(
-            "physmain",
-            "Physics Main",
-            (float) 52.415941,
-            (float) -4.065818,
-            "Main lecture theatre for the conference, near where registration happens."
-    );
-    private static Speaker steveScott = new Speaker(
-            "SteveScott",
-            "Steve Scott",
-            "Scotty is legendary in the MAC community as the organiser of the sadly" +
-                    " defunct NSConference, but still appearing live at iOSDevUK",
-            "macdevnet"
-    );
-    public static final Session[] sessions = {
-            new Session(
-                    "havoc",
-                    "Drinking coffee in Physics Main",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.COFFEE,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of softwa",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of softw",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of soft",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of sof",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of so",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of s",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of ",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs o",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            )
-    };
-
-    public static final Session[] sessions2 = {
-            new Session(
-                    "havoc",
-                    "This is the second recycler view",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.COFFEE,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of softwa",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of softw",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of soft",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of sof",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of so",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of s",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of ",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs o",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            )
-    };
-
-    public static final Session[] sessions3 = {
-            new Session(
-                    "havoc",
-                    "This is the third recycler view",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.COFFEE,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of softwa",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of softw",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of soft",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of sof",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of so",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of s",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of ",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs of",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            ),
-            new Session(
-                    "havoc",
-                    "Cry Havoc! and let slip the dogs o",
-                    "Scotty explores the wonder of the software industry",
-                    physMain,
-                    "2019-12-13",
-                    5,
-                    "12:00",
-                    "12:40",
-                    SessionType.TALK,
-                    steveScott
-            )
-    };
-    // DELETE THE CODE BLOCK ABOVE BEFORE SUBMISSION
-
+    /**
+     * Gets the session ID
+     *
+     * @return String containing Session ID
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Gets the session's title
+     *
+     * @return String containing Session title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Gets the session's content
+     *
+     * @return String containing Session content
+     */
     public String getContent() {
         return content;
     }
 
-    public Building getBuildingId() {
-        return buildingId;
+    /**
+     * Gets the location ID
+     *
+     * @return String containing Session's location ID
+     */
+    public String getLocationId() {
+        return locationId;
     }
 
-    public String getSessionDate() {
+    /**
+     * Gets the session's date
+     *
+     * @return Date containing session's date
+     */
+    public Date getSessionDate() {
         return sessionDate;
     }
 
+    /**
+     * Gets the session's order
+     *
+     * @return Integer containing the session's order
+     */
     public int getSessionOrder() {
         return sessionOrder;
     }
 
+    /**
+     * Gets the start time of the session
+     *
+     * @return String containing start time of the session
+     */
     public String getTimeStart() {
         return timeStart;
     }
 
+    /**
+     * Gets the end time of the session
+     *
+     * @return String containing the end time of the session
+     */
     public String getTimeEnd() {
         return timeEnd;
     }
 
+    /**
+     * Gets the session type
+     *
+     * @return Enum corresponding to the session's type
+     */
     public SessionType getSessionType() {
         return sessionType;
     }
 
-    public Speaker getSpeaker() {
-        return speaker;
+    /**
+     * Gets the speaker ID
+     *
+     * @return String containing the speaker ID
+     */
+    public String getSpeakerId() {
+        return speakerId;
     }
+
 
 }

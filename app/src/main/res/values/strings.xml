@@ -9,7 +9,7 @@
         get a feel for the conference. We hope you have a nice time in Aberystwyth.
     </string>
     <string name="featured_speaker">Featured speaker</string>
-    <string name="neil_taylor">UnknownFirst UnknownLast</string>
+    <string name="featured_speaker_name">UnknownFirst UnknownLast</string>
     <string name="welcome">Welcome</string>
     <string name="speaker_desc" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
         porttitor eros sapien, a ultrices quam euismod a. Nam dignissim maximus mauris a ultricies.
@@ -21,25 +21,25 @@
         leo. Integer sit amet euismod justo. Cras sed viverra nisi, a tincidunt diam.
         Nunc tortor est, gravida a augue eget, fermentum gravida nunc.</string>
     <string name="whatson_intro">This is a list of events that are happening. Click on each item
-    to get more details or to add to your favourites.</string>
+    to get more details or to add to your favourite.</string>
     <string name="nav_header_image_description">Aberystwyth shoreline</string>
     <string name="nav_home">Home</string>
     <string name="nav_whatson">Events</string>
     <string name="nav_favourites">Favourites</string>
     <string name="nav_speakers">Speakers</string>
     <string name="nav_contactus">Contact Us</string>
-    <string name="add_to_favourites">Add to favourites</string>
+    <string name="add_to_favourites">Add to favourite</string>
     <string name="speaker_formatted_string"><b>Speaker:</b> %1$s</string>
     <string name="when_formatted_string"><b>When:</b> %1$s</string>
     <string name="time_formatted_string"><b>Time:</b> %1$s to %2$s</string>
     <string name="where_formatted_string"><b>Where:</b> %1$s</string>
     <string name="how_to_get_there">How to get there</string>
-    <string name="favourite_dialog_text">Adding this event to your favourites will make it available to be " +
-                        "viewed in the \'Favourites\' tab, as well as reminding you 15 minutes " +
-                        "before it begins</string>
+    <string name="favourite_dialog_text">Adding this event to your favourites will make it
+        available to be viewed in the \'Favourites\' tab</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
-    <string name="fave_info">Your favourites are listed here. Click on your favourites to find more information or remove them.</string>
+    <string name="fave_info">Your favourite are listed here. Click on your favourite to find more information or remove them.</string>
     <string name="back">Back</string>
     <string name="next">Next</string>
+    <string name="remove_fave">Remove from favourites</string>
 </resources>

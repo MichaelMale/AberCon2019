@@ -1,4 +1,4 @@
-package uk.ac.aber.cs31620.abercon2019.model;
+package uk.ac.aber.cs31620.abercon2019.model.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -9,25 +9,30 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import uk.ac.aber.cs31620.abercon2019.model.Favourite;
+
 import static androidx.room.OnConflictStrategy.REPLACE;
 
 @Dao
 public interface FavouritesDao {
 
     @Insert(onConflict = REPLACE)
-    void insertSingleFavourite(Favourites favourite);
+    void insertSingleFavourite(Favourite favourite);
+
+    @Insert
+    void insertMultipleFavourites(Favourite[] favourites);
 
     @Update(onConflict = REPLACE)
-    int updateFavourite(Favourites favourites);
+    int updateFavourite(Favourite favourite);
 
     @Delete
-    void deleteFavourite(Favourites favourites);
+    void deleteFavourite(Favourite favourite);
 
     @Query("DELETE FROM favourites")
     void deleteAll();
 
     @Query("SELECT * FROM favourites")
-    LiveData<List<Favourites>> getAllFavourites();
+    LiveData<List<Favourite>> getAllFavourites();
 
 
 }

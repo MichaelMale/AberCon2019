@@ -1,15 +1,22 @@
 package uk.ac.aber.cs31620.abercon2019.ui.event_details;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,10 +28,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.Objects;
 
 import uk.ac.aber.cs31620.abercon2019.R;
-import uk.ac.aber.cs31620.abercon2019.model.Building;
+import uk.ac.aber.cs31620.abercon2019.model.Favourite;
+import uk.ac.aber.cs31620.abercon2019.model.Location;
 import uk.ac.aber.cs31620.abercon2019.model.Session;
 import uk.ac.aber.cs31620.abercon2019.model.SessionType;
 import uk.ac.aber.cs31620.abercon2019.model.Speaker;
+import uk.ac.aber.cs31620.abercon2019.model.util.DateTimeConverter;
+import uk.ac.aber.cs31620.abercon2019.model.viewmodels.FavouritesViewModel;
+import uk.ac.aber.cs31620.abercon2019.model.viewmodels.LocationViewModel;
+import uk.ac.aber.cs31620.abercon2019.model.viewmodels.SpeakerViewModel;
 
 /**
  * ViewEventDetailsActivity.java - A class that defines the event detail activity. This activity
@@ -37,28 +49,17 @@ import uk.ac.aber.cs31620.abercon2019.model.Speaker;
  * @see OnMapReadyCallback
  * @see GoogleMap
  */
-public class ViewEventDetailsActivity extends AppCompatActivity
-        implements OnMapReadyCallback {
-
-    Button favouriteButton;
-
-    public static final String EXTRA_SESSION_ID = "id";
+public class ViewEventDetailsActivity extends AppCompatActivity {
+    public static final String SELECTED_SESSION = "SELECTED_SESSION";
+    private Button favouriteButton;
     private Session selectedSession;
 
-    /**
-     * Method to run setup methods in preparation for the execution of the program.
-     *
-     * @param savedInstanceState Any bundle that has saved the instance of the program.
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_view_event_details);
 
-        int sessionId = (Integer) getIntent().getExtras().get(EXTRA_SESSION_ID);
-        selectedSession = Session.sessions[sessionId];
-
-        // Set the toolbar
         Toolbar toolbar = findViewById(R.id.details_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle("Event");
@@ -66,122 +67,142 @@ public class ViewEventDetailsActivity extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
 
-        // Fetch the favourite button - this needs to be hidden for events that aren't talks and
-        // workshops
         favouriteButton = findViewById(R.id.favourite_button);
 
-        setupViews();
-    }
+        Intent intent = this.getIntent();
+        Bundle bundle = intent.getExtras();
 
-    /**
-     * Method to set up the respective views within the design. It takes pointers from the
-     * Session global variable and adds them to specific parts of the design.
-     * TODO: Consider making this an asynchronous task as large sets of data are introduced
-     *
-     * @see Session
-     * @see Building
-     * @see Speaker
-     */
-    private void setupViews() {
-
-        // Firstly check if the event is a talk or a workshop. The button needs to be hidden
-        // if it is not.
-
-        if (selectedSession.getSessionType() == SessionType.WORKSHOP ||
-                selectedSession.getSessionType() == SessionType.TALK) {
-            favouriteButton.setVisibility(View.VISIBLE);
+        if (bundle != null) {
+            selectedSession = (Session) bundle.getSerializable(SELECTED_SESSION);
+            this.setDetails(Objects.requireNonNull(selectedSession));
+        } else {
+            Log.e("NO_DATA", "No data was passed to the event details activity.");
         }
 
-        Building sessionBuilding = selectedSession.getBuildingId();
-        Speaker sessionSpeaker = selectedSession.getSpeaker();
+
+    }
 
 
+    private void setDetails(Session session) {
+        // Firstly check if the event is a talk or a workshop. Both the button and the speaker
+        // card need to be hidden if not
+        boolean isTalkOrWorkshop = false;
+        if (session.getSessionType() == SessionType.WORKSHOP || session.getSessionType() == SessionType.TALK) {
+            isTalkOrWorkshop = true;
+        }
+
+        if (isTalkOrWorkshop) { // Events that aren't talks and workshops can't be favourited,
+            // therefore there isn't any need for a favourite button.
+            favouriteButton.setVisibility(View.VISIBLE);
+
+        }
+
+        // Set the title
         TextView viewForTitle = findViewById(R.id.session_title);
-        viewForTitle.setText(selectedSession.getTitle());
+        viewForTitle.setText(session.getTitle());
 
+        // Set the description
         TextView viewForDescription = findViewById(R.id.session_description);
-        viewForDescription.setText(selectedSession.getContent());
+        viewForDescription.setText(session.getContent());
 
-        String speakerNameResource = getString(R.string.speaker_formatted_string,
-                sessionSpeaker.getName());
-        TextView viewForName = findViewById(R.id.speaker_card_name);
-        viewForName.setText(speakerNameResource);
+        // Get a speaker LiveData by the speaker ID in the Session, only if the session has one
 
-        TextView viewForSpeakerDescription = findViewById(R.id.speaker_card_description);
-        viewForSpeakerDescription.setText(sessionSpeaker.getBiography());
+        SpeakerViewModel speakerViewModel = ViewModelProviders.of(this).get(SpeakerViewModel.class);
+        LiveData<Speaker> speakerOfSession =
+                speakerViewModel.fetchSpeakerById(session.getSpeakerId());
+        speakerOfSession.observe(ViewEventDetailsActivity.this, speaker -> {
+            if (speaker != null) {
+                // Set the speaker name
+                String speakerNameResource = getString(R.string.speaker_formatted_string,
+                        speaker.getName());
+                TextView viewForName = findViewById(R.id.speaker_card_name);
+                viewForName.setText(speakerNameResource);
 
+                // Set the speaker description
+                TextView viewForSpeakerDescription = findViewById(R.id.speaker_card_description);
+                viewForSpeakerDescription.setText(speaker.getBiography());
+
+                // Set the speaker image
+                ImageView viewForSpeakerImage = findViewById(R.id.speaker_card_image);
+                Bitmap speakerImage = speaker.getImagePath(viewForSpeakerImage.getContext());
+                if (speakerImage != null) {
+                    viewForSpeakerImage.setImageBitmap(speakerImage);
+                    viewForSpeakerImage.setContentDescription(speaker.getName());
+                } else {
+                    Log.w("IMAGE_MISSING", speaker.getId() + " doesn't appear to" +
+                            " have an associated image.");
+                }
+            } else {
+                CardView cardView = findViewById(R.id.speaker_details);
+                cardView.setVisibility(View.GONE);
+            }
+        });
+
+
+        // Set the session date
         String whenResource = getString(R.string.when_formatted_string,
-                selectedSession.getSessionDate());
+                DateTimeConverter.toString(session.getSessionDate()));
         TextView viewForWhen = findViewById(R.id.when);
         viewForWhen.setText(whenResource);
 
-        String timeResource = getString(R.string.time_formatted_string,
-                selectedSession.getTimeStart(), selectedSession.getTimeEnd());
+        // Set the session time
+        String timeResource = getString(R.string.time_formatted_string, session.getTimeStart(),
+                session.getTimeEnd());
         TextView viewForTime = findViewById(R.id.time);
         viewForTime.setText(timeResource);
 
-        String whereResource = getString(R.string.where_formatted_string,
-                sessionBuilding.getName());
-        TextView viewForWhere = findViewById(R.id.where);
-        viewForWhere.setText(whereResource);
+        // Get a location LiveData by the location ID in the Session. Sessions should always have
+        // a location ID
+        LocationViewModel locationViewModel =
+                ViewModelProviders.of(this).get(LocationViewModel.class);
+        LiveData<Location> locationOfSession =
+                locationViewModel.fetchLocationById(session.getLocationId());
+        locationOfSession.observe(ViewEventDetailsActivity.this, location -> {
+            if (location != null) {
+                // Set the session location
+                String whereResource = getString(R.string.where_formatted_string,
+                        location.getName());
+                TextView viewForWhere = findViewById(R.id.where);
+                viewForWhere.setText(whereResource);
 
-        // MapView - this requires the Google Play Services API
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
-        Objects.requireNonNull(mapFragment).getMapAsync(this);
+                // Set up the map, requiring the Google Play Services API. This works by passing
+                // the latitude and longitude of the location to the API through a lambda expression
+                SupportMapFragment mapFragment =
+                        (SupportMapFragment) getSupportFragmentManager()
+                                .findFragmentById(R.id.google_map);
+                Objects.requireNonNull(mapFragment)
+                        .getMapAsync(googleMap -> {
+                            // Get the co-ordinates of where the session is
+                            LatLng currentLoc = new LatLng(location.getLatitude(),
+                                    location.getLongitude());
+
+                            googleMap.addMarker(new MarkerOptions()
+                                    .position(currentLoc)
+                                    .title(location.getName()));
+
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLoc));
+
+                            googleMap.setMinZoomPreference(15); // Zooms in close enough to see
+                            // where the building is, but not too far outwards as all locations
+                            // are intended to be in Aberystwyth.
+                        });
+            }
+        });
+
     }
 
-
-    /**
-     * This is an implemented method that is intended to prepare the Google Map part of the
-     * program. It does this by taking a reference to the building that the session is in, and
-     * setting a marker to be where its recorded latitude and longitude is.
-     * <p>
-     * The API key for the Google Map API has been included in the Android manifest, but the key
-     * is not linked to a billing account. The map is only using Place mode, which, according to
-     * Google's website, is free, and does not use advanced requests (see
-     * <a href="https://developers.google.com/maps/documentation/embed/usage-and-billing">here</a>)
-     * - I turned it off from the console anyway.
-     *
-     * @param googleMap Object of type GoogleMap containing the current map
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-
-        // get the coordinates of where the event is
-        Building currentBuilding = selectedSession.getBuildingId();
-        double latitude = currentBuilding.getLatitude();
-        double longitude = currentBuilding.getLongitude();
-
-        LatLng currentLoc = new LatLng(latitude, longitude);
-        googleMap.addMarker(new MarkerOptions().position(currentLoc).title("Event location"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLoc));
-        googleMap.setMinZoomPreference(15); // Zooms in close enough to see where the building is, not
-        // too far outwards as all locations are intended to be in Aberystwyth
-    }
-
-    /**
-     * Opens the 'Add to favourites' dialog box. This is called when the user presses the 'Add to
-     * favourites' button.
-     *
-     * @param view The view that was clicked
-     */
     public void openFavouritesDialog(View view) {
-
         DialogInterface.OnClickListener dialogClickListener =
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case DialogInterface.BUTTON_POSITIVE:
-                                addSessionToFavourites();
-                                break;
+                (dialog, which) -> {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            addSessionToFavourites();
+                            break;
 
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                // Cancel button clicked
-                                dialog.dismiss();
-                                break;
-                        }
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            // Cancel button clicked
+                            dialog.dismiss();
+                            break;
                     }
                 };
 
@@ -191,14 +212,15 @@ public class ViewEventDetailsActivity extends AppCompatActivity
                 .setNegativeButton(getString(R.string.cancel), dialogClickListener)
                 .setPositiveButton(getString(R.string.ok), dialogClickListener)
                 .show();
-
     }
 
-    /**
-     * Adds the current Session into a list of favourites that are on a separate fragment.
-     */
     private void addSessionToFavourites() {
-        // TODO: Pass the favourite object to the list in FavouritesFragment. First going to link
-        //  up SQLite database.
+        Favourite fave = new Favourite();
+        fave.setSessionId(selectedSession.getId());
+        fave.setLocationId(selectedSession.getLocationId());
+        fave.setSpeakerId(selectedSession.getSpeakerId());
+        FavouritesViewModel favouritesViewModel
+                = ViewModelProviders.of(this).get(FavouritesViewModel.class);
+        favouritesViewModel.insert(fave);
     }
 }

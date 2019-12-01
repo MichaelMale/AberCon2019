@@ -11,10 +11,10 @@
         android:layout_height="wrap_content">
 
         <include
-            layout="@layout/toolbar"
             android:id="@+id/details_toolbar"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            layout="@layout/toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/session_title"
@@ -30,18 +30,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:onClick="openFavouritesDialog"
             android:text="@string/add_to_favourites"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/session_title"
             android:visibility="gone"
-            android:onClick="openFavouritesDialog" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/session_title" />
 
         <TextView
             android:id="@+id/session_description"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_margin="5dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/favourite_button" />
 

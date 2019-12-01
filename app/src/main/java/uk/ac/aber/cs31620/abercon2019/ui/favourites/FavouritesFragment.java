@@ -2,25 +2,27 @@ package uk.ac.aber.cs31620.abercon2019.ui.favourites;
 
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.LinkedList;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
 
 import uk.ac.aber.cs31620.abercon2019.R;
+import uk.ac.aber.cs31620.abercon2019.model.EventsAdapter;
 import uk.ac.aber.cs31620.abercon2019.model.Session;
-import uk.ac.aber.cs31620.abercon2019.model.SessionListAdapter;
+import uk.ac.aber.cs31620.abercon2019.model.viewmodels.SessionViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FavouritesFragment extends Fragment {
-    private LinkedList<Session> favouriteSessions = new LinkedList<>();
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -33,31 +35,23 @@ public class FavouritesFragment extends Fragment {
         // Inflate the layout for this fragment
         View inflate = inflater.inflate(R.layout.fragment_favourites, container, false);
 
-        RecyclerView eventsRecycler = inflate.findViewById(R.id.favourites_recycler);
+        final RecyclerView favouritesRecycler = inflate.findViewById(R.id.favourites_recycler);
+        SessionViewModel sessionViewModel =
+                ViewModelProviders.of(this).get(SessionViewModel.class);
 
-        String[] eventNames = new String[favouriteSessions.size()];
-        for (int i = 0; i < eventNames.length; i++) {
-            eventNames[i] = favouriteSessions.get(i).getTitle();
-        }
+        LiveData<List<Session>> favourites = sessionViewModel.getSessionsByFavourites();
+        favourites.observe(this, faves -> {
+            EventsAdapter adapter = new EventsAdapter(getContext(), faves);
+            favouritesRecycler.setAdapter(adapter);
+        });
 
-        String[] eventDates = new String[favouriteSessions.size()];
-        for (int i = 0; i < eventDates.length; i++) {
-            String concatenated = "";
-            concatenated += favouriteSessions.get(i).getSessionDate();
-            concatenated += " ";
-            concatenated += favouriteSessions.get(i).getTimeStart();
-            eventDates[i] = concatenated;
-        }
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        favouritesRecycler.setLayoutManager(layoutManager);
 
-        SessionListAdapter adapter = new SessionListAdapter(eventNames, eventDates);
-        eventsRecycler.setAdapter(adapter);
+
 
 
         return inflate;
-    }
-
-    public void updateFavourites(Session selectedFavourite) {
-        favouriteSessions.add(selectedFavourite);
     }
 
 }

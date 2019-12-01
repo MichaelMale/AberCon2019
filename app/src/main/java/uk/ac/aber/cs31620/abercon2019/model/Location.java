@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "locations")
-public class Building {
+public class Location {
 
     @NonNull
     @PrimaryKey
@@ -16,7 +16,7 @@ public class Building {
     private double longitude;
     private String description;
 
-    public Building(@NonNull String id, String name, double latitude, double longitude,
+    public Location(@NonNull String id, String name, double latitude, double longitude,
                     String description) {
         this.id = id;
         this.name = name;

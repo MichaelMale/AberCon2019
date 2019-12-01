@@ -1,4 +1,4 @@
-package uk.ac.aber.cs31620.abercon2019.datasource.util;
+package uk.ac.aber.cs31620.abercon2019.model.datasource.util;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

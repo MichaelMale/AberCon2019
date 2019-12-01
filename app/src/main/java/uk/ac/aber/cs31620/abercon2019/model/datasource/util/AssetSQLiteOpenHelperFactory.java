@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.ac.aber.cs31620.abercon2019.datasource.util;
+package uk.ac.aber.cs31620.abercon2019.model.datasource.util;
 
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
