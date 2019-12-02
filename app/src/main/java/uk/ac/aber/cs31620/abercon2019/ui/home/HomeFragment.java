@@ -27,15 +27,19 @@ import uk.ac.aber.cs31620.abercon2019.model.viewmodels.SpeakerViewModel;
  * fragment. The home fragment is the first fragment that the user will see, containing some text
  * introducing them to the app and cycling through a random speaker's name and photo.
  *
- * @author Michael Male (mim39@aber.ac.uk)
- * @version 0.2
+ * @author Michael Male
+ * @version 1.0 2019-12-01
  */
 public class HomeFragment extends Fragment {
     public HomeFragment() {
         // Required empty public constructor
     }
 
-
+    /**
+     * Creates the view for the home fragment. This method finds a random speaker image, name,
+     * and description, and puts this onto the home screen each time the fragment is loaded. A
+     * side effect of this is that it is loaded each time the state is changed.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

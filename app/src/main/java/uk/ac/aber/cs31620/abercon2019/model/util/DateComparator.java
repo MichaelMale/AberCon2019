@@ -11,7 +11,7 @@ import java.util.Date;
  * <a href="https://tech.chitgoks.com/2009/09/25/java-sort-date-using-comparator/></a>
  *
  * @author Michael Male
- * @version 1.0  PRODUCTION
+ * @version 1.0  2019-11-30
  */
 public class DateComparator implements Comparator<Date> {
     @Override

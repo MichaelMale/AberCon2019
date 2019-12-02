@@ -44,7 +44,8 @@ import uk.ac.aber.cs31620.abercon2019.model.viewmodels.SpeakerViewModel;
  * fragment's recycler view. It shows details of the event and allows you to add the event to
  * your favourites.
  *
- * @author Michael Male mim39@aber.ac.uk
+ * @author Michael Male
+ * @version 1.0 2019-11-29
  * @see AppCompatActivity
  * @see OnMapReadyCallback
  * @see GoogleMap
@@ -54,6 +55,12 @@ public class ViewEventDetailsActivity extends AppCompatActivity {
     private Button favouriteButton;
     private Session selectedSession;
 
+    /**
+     * The on create method. This method sets up the favourite button with its resource, sets up
+     * the toolbar, and takes the serializable session from an intent.
+     *
+     * @param savedInstanceState Any save state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +68,10 @@ public class ViewEventDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_event_details);
 
         Toolbar toolbar = findViewById(R.id.details_toolbar);
-        setSupportActionBar(toolbar);
         toolbar.setTitle("Event");
+        toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+        setSupportActionBar(toolbar);
+
 
         ActionBar actionBar = getSupportActionBar();
         Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
@@ -83,6 +92,11 @@ public class ViewEventDetailsActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Sets the details required for the activity. Further inline comments provide a more
+     * in-depth explanation.
+     * @param session   The session that is being represented in this instance of the activity.
+     */
     private void setDetails(Session session) {
         // Firstly check if the event is a talk or a workshop. Both the button and the speaker
         // card need to be hidden if not
@@ -91,9 +105,21 @@ public class ViewEventDetailsActivity extends AppCompatActivity {
             isTalkOrWorkshop = true;
         }
 
-        if (isTalkOrWorkshop) { // Events that aren't talks and workshops can't be favourited,
-            // therefore there isn't any need for a favourite button.
-            favouriteButton.setVisibility(View.VISIBLE);
+        // Then check in the favourites relation if the current session ID exists, to manage what
+        // type of button is shown. This is unnecessary for events that can't be added to
+        // favourites.
+        if (isTalkOrWorkshop) {
+            FavouritesViewModel favouritesViewModel =
+                    ViewModelProviders.of(this).get(FavouritesViewModel.class);
+            LiveData<Integer> isAFavourite = favouritesViewModel.checkIfFavourite(session.getId());
+            isAFavourite.observe(this, faveFlag -> {
+                if (faveFlag > 0) {
+                    favouriteButton.setVisibility(View.VISIBLE);
+                    favouriteButton.setEnabled(false);
+                } else {
+                    favouriteButton.setVisibility(View.VISIBLE);
+                }
+            });
 
         }
 
@@ -191,6 +217,11 @@ public class ViewEventDetailsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Method to open a dialog box, that asks the user if they are sure they want to add a given
+     * session to their favourites.
+     * @param view The view that this dialog box is being used with.
+     */
     public void openFavouritesDialog(View view) {
         DialogInterface.OnClickListener dialogClickListener =
                 (dialog, which) -> {
@@ -214,13 +245,15 @@ public class ViewEventDetailsActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Method to add the session to the favourites table, through use of the view model. It then
+     * disables the button to avoid duplicate addition to the table.
+     */
     private void addSessionToFavourites() {
-        Favourite fave = new Favourite();
-        fave.setSessionId(selectedSession.getId());
-        fave.setLocationId(selectedSession.getLocationId());
-        fave.setSpeakerId(selectedSession.getSpeakerId());
+        Favourite fave = new Favourite(selectedSession.getId());
         FavouritesViewModel favouritesViewModel
                 = ViewModelProviders.of(this).get(FavouritesViewModel.class);
         favouritesViewModel.insert(fave);
+        favouriteButton.setEnabled(false);
     }
 }

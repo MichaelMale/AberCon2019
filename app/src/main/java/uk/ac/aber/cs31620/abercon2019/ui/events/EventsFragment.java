@@ -33,7 +33,13 @@ import uk.ac.aber.cs31620.abercon2019.model.util.DateComparator;
 import uk.ac.aber.cs31620.abercon2019.model.viewmodels.SessionViewModel;
 
 /**
- * A simple {@link Fragment} subclass.
+ * EventsFragment.java - A class to represents the events fragment part of the user interface.
+ * This class contains a recycler view, that contains basic details of each session, with the
+ * user being given the opportunity to click on a session that is a workshop or a talk to find
+ * out more information.
+ *
+ * @author Michael Male
+ * @version 1.0 2019-12-02
  */
 public class EventsFragment extends Fragment {
     // Global variables for use both in the onCreate, the Observer and the OnClickListener
@@ -46,6 +52,9 @@ public class EventsFragment extends Fragment {
 
 
     /**
+     * Creates the view of the events fragment, linking up resources with objects within the code
+     * . Further inline comments can be found.
+     *
      * @param inflater           The LayoutInflater object that can be used to inflate
      *                           any views in the fragment,
      * @param container          If non-null, this is the parent view that the fragment's
@@ -72,18 +81,16 @@ public class EventsFragment extends Fragment {
 
         LiveData<List<Session>> allSessions = sessionViewModel.getAllSessions();
 
+        // The sessions are being split by date. Two stacks are used for navigation between these
+        // dates, allowing for as little as one date and as many dates as can be practicably held.
         final Stack<Date> forwardStack = new Stack<>();
         final Stack<Date> backwardsStack = new Stack<>();
 
+        // This date format represents a date like "Tue, 03 Dec"
         final SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM",
                 Locale.getDefault());
 
         final TextView dateSelector = view.findViewById(R.id.date);
-
-        /*
-        Data doesn't persist when changing fragment or moving to a landscape orientation. Mildly
-        annoying, hardly the end of the world, though.
-         */
 
         allSessions.observe(this, sessions -> {
             if (sessions != null && !sessions.isEmpty()) {
@@ -97,19 +104,25 @@ public class EventsFragment extends Fragment {
                 currentDate = datesInDatabase.getFirst();
                 dateSelector.setText(format.format(currentDate));
 
+                // If nothing is on the forward stack, push all dates apart from the earliest
+                // date onto it. Sort it in reverse order to ensure the stack works properly.
                 if (forwardStack.empty()) {
                     forwardStack.addAll(datesInDatabase.subList(1, datesInDatabase.size()));
                     forwardStack.sort(new DateComparator());
                 }
 
                 EventsAdapter adapter = new EventsAdapter(getContext(),
-                        sessionsSortedByDate.get(currentDate));
+                        sessionsSortedByDate.get(currentDate), true);
                 eventsRecycler.setAdapter(adapter);
 
 
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
                 eventsRecycler.setLayoutManager(layoutManager);
 
+                // If the back button is pressed, the date that is contained on the backwards
+                // stack is popped, the current date is pushed onto the forward stack, the popped
+                // date is held in a global 'current date' variable and the adapter is swapped
+                // over to that date's value. The same strategy applies for the next button.
                 ImageButton backButton = view.findViewById(R.id.back_button);
                 backButton.setOnClickListener(view1 -> {
                     Date goingTo;
@@ -121,7 +134,7 @@ public class EventsFragment extends Fragment {
 
                         EventsAdapter newAdapter =
                                 new EventsAdapter(getContext(),
-                                        sessionsSortedByDate.get(currentDate));
+                                        sessionsSortedByDate.get(currentDate), true);
                         eventsRecycler.swapAdapter(newAdapter, false);
                     } else {
                         Toast.makeText(getContext(), "No previous date", Toast.LENGTH_SHORT).show();
@@ -140,7 +153,7 @@ public class EventsFragment extends Fragment {
 
                         EventsAdapter newAdapter =
                                 new EventsAdapter(getContext(),
-                                        sessionsSortedByDate.get(currentDate));
+                                        sessionsSortedByDate.get(currentDate), true);
                         eventsRecycler.swapAdapter(newAdapter, false);
                     } else {
                         Toast.makeText(getContext(), "No next date", Toast.LENGTH_SHORT).show();

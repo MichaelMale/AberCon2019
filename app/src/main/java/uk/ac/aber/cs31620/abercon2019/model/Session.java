@@ -7,17 +7,16 @@ import androidx.room.TypeConverters;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 import uk.ac.aber.cs31620.abercon2019.model.util.DateTimeConverter;
 import uk.ac.aber.cs31620.abercon2019.model.util.SessionTypeConverter;
 
 /**
- * This is a temporary implementation of Session that transfers the database 'as-is', that is,
- * without converting location id's to their respective locations. This will be changed hopefully
- * but I just wanted to check if I could correctly migrate an SQLite database.
+ * Session.java - Contains a Session object pertaining to the sessions table in the database.
  *
  * @author Michael Male
- * @version 0.1 ALPHA
+ * @version 1.0 2019-12-03
  */
 @Entity(tableName = "sessions")
 @TypeConverters({DateTimeConverter.class, SessionTypeConverter.class})
@@ -155,5 +154,37 @@ public class Session implements Serializable {
         return speakerId;
     }
 
+    /**
+     * Compares two Sessions by every member.
+     *
+     * @param o Object to be compared.
+     * @return true if all members are the same as eachother, false if not.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Session session = (Session) o;
+        return sessionOrder == session.sessionOrder &&
+                id.equals(session.id) &&
+                Objects.equals(title, session.title) &&
+                Objects.equals(content, session.content) &&
+                Objects.equals(locationId, session.locationId) &&
+                Objects.equals(sessionDate, session.sessionDate) &&
+                Objects.equals(timeStart, session.timeStart) &&
+                Objects.equals(timeEnd, session.timeEnd) &&
+                sessionType == session.sessionType &&
+                Objects.equals(speakerId, session.speakerId);
+    }
 
+    /**
+     * Creates a hash of the Session for quicker comparison.
+     *
+     * @return int representing a hash of a Session object.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, content, locationId, sessionDate, sessionOrder,
+                timeStart, timeEnd, sessionType, speakerId);
+    }
 }

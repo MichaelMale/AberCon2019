@@ -29,6 +29,12 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java', 'src/inMemoryDatabase/java', 'src/persistentDatabase/java']
+        }
+    }
+
 }
 
 dependencies {
@@ -42,6 +48,25 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
+    // Dependencies for local unit tests
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation "android.arch.core:core-testing:1.1.1"
+    testImplementation "android.arch.core:core-testing:1.1.1"
+
+    testImplementation 'org.mockito:mockito-core:2.21.0'
+
+    // Android Testing Support Library's runner and rules
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'org.mockito:mockito-core:2.21.0'
+
+    // Espresso UI Testing dependencies.
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
+
     // Room components
     implementation 'androidx.room:room-runtime:2.2.2'
     annotationProcessor 'androidx.room:room-compiler:2.2.2'
@@ -49,5 +74,6 @@ dependencies {
 
     // Lifecycle components
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    //noinspection LifecycleAnnotationProcessorWithJava8
     annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.1.0'
 }

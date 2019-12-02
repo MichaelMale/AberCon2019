@@ -8,6 +8,13 @@ import java.util.List;
 
 import uk.ac.aber.cs31620.abercon2019.model.Speaker;
 
+/**
+ * SpeakerDao.java - A DAO interface that contains methods to manipulate data from the speakers
+ * table.
+ *
+ * @author Michael Male
+ * @version 1.0 2019-12-03
+ */
 @Dao
 public interface SpeakerDao {
 

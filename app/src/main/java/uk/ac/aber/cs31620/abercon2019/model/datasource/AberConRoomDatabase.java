@@ -1,9 +1,9 @@
 package uk.ac.aber.cs31620.abercon2019.model.datasource;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -39,12 +39,12 @@ import uk.ac.aber.cs31620.abercon2019.model.datasource.util.AssetSQLiteOpenHelpe
  * Aberystwyth University.
  *
  * @author Michael Male
- * @version 2.0 PRODUCTION
+ * @version 3.0 2019-12-03
  * @see Room
  * @see RoomDatabase
  */
-@Database(entities = {Session.class, Speaker.class, Location.class, Favourite.class}, version = 2
-        , exportSchema = false)
+@Database(entities = {Session.class, Speaker.class, Location.class, Favourite.class}, version = 3
+        , exportSchema = true)
 public abstract class AberConRoomDatabase extends RoomDatabase {
     private static final String DB_NAME = "abercon_database"; // Constant that holds the name
     // given to the database
@@ -57,11 +57,23 @@ public abstract class AberConRoomDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             Log.d("migrate", "Doing a migrate from version 1 to 2");
-            // May require explicit SQL
+            // Explicit SQL was required to create a favourites table with a single primary key
+            // containing the ID of the session that the user added to their favourites.
+            database.execSQL("CREATE TABLE IF NOT EXISTS favourites (id TEXT NOT NULL, PRIMARY " +
+                    "KEY(id))");
         }
     };
 
-    @SuppressLint("StaticFieldLeak")
+    /**
+     * Migration final kept in the event of further changed to the database
+     */
+    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("migrate", "Doing a migrate from version 2 to 3");
+        }
+    };
+
     private static AberConRoomDatabase INSTANCE;
 
     /**
@@ -95,35 +107,35 @@ public abstract class AberConRoomDatabase extends RoomDatabase {
 
         return (builder.openHelperFactory(new AssetSQLiteOpenHelperFactory())
                 .allowMainThreadQueries()
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                 .build());
     }
 
     /**
-     * Gets the session DAO
+     * Gets the session DAO.
      *
-     * @return SessionDAO containing the session DAO
+     * @return SessionDAO containing the session DAO.
      */
     public abstract SessionDao getSessionDao();
 
     /**
-     * Gets the location DAO
+     * Gets the location DAO.
      *
-     * @return LocationDAO containing the location DAO
+     * @return LocationDAO containing the location DAO.
      */
     public abstract LocationDao getLocationDao();
 
     /**
-     * Gets the speaker DAO
+     * Gets the speaker DAO.
      *
-     * @return SpeakerDAO containing the speaker DAO
+     * @return SpeakerDAO containing the speaker DAO.
      */
     public abstract SpeakerDao getSpeakerDao();
 
     /**
-     * Gets the favourites DAO
+     * Gets the favourites DAO.
      *
-     * @return FavouritesDAO containing the favourites DAO
+     * @return FavouritesDAO containing the favourites DAO.
      */
     public abstract FavouritesDao getFavouritesDao();
 }

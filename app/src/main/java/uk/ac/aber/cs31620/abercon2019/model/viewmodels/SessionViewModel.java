@@ -12,15 +12,29 @@ import java.util.List;
 import uk.ac.aber.cs31620.abercon2019.model.Session;
 import uk.ac.aber.cs31620.abercon2019.model.datasource.SessionRepository;
 
+/**
+ * SessionViewModel.java - A view model to manage calls to the database on the UI thread.
+ *
+ * @version 1.0 2019-12-03
+ * @see AndroidViewModel
+ */
 public class SessionViewModel extends AndroidViewModel {
     private SessionRepository repository;
     private LiveData<List<Session>> allSessions;
 
+    /**
+     * Constructor for objects of type SessionViewModel.
+     *
+     * @param application Object of type Application pertaining to the app that is currently
+     *                    running.
+     */
     public SessionViewModel(@NonNull Application application) {
         super(application);
         repository = new SessionRepository(application);
         allSessions = repository.getAllSessions();
     }
+
+    /* Interface methods */
 
     public LiveData<List<Session>> getAllSessions() {
         return allSessions;
@@ -38,7 +52,7 @@ public class SessionViewModel extends AndroidViewModel {
         return repository.getSessionsByFavourites();
     }
 
-    /* Bad: Going to try to use LiveData instead */
+    /* Synchronous call, should not be used during production. */
     @Deprecated
     public Session fetchSessionBySessionId(String id) {
         return repository.fetchSessionBySessionId(id);

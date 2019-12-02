@@ -2,8 +2,6 @@ package uk.ac.aber.cs31620.abercon2019.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 /**
@@ -15,31 +13,20 @@ import androidx.room.PrimaryKey;
  * makes it very easy to store data within the app storage.
  *
  * @author Michael Male
- * @version 1.0     PRODUCTION
+ * @version 1.0     2019-12-03
  * @see uk.ac.aber.cs31620.abercon2019.ui.favourites.FavouritesFragment
  * @see androidx.room.Room
  */
-@Entity(indices = {@Index("speakerId"),
-        @Index("locationId")},
-        tableName = "favourites",
-        foreignKeys = {@ForeignKey(entity = Session.class,
-                parentColumns = "id",
-                childColumns = "sessionId"),
-                @ForeignKey(entity = Speaker.class,
-                        parentColumns = "id",
-                        childColumns = "speakerId"),
-                @ForeignKey(entity = Location.class,
-                        parentColumns = "id",
-                        childColumns = "locationId")
-        })
+@Entity(tableName = "favourites")
 public class Favourite {
 
     @NonNull
     @PrimaryKey
-    private String sessionId;
+    private String id;
 
-    private String speakerId;
-    private String locationId;
+    public Favourite(@NonNull String id) {
+        this.id = id;
+    }
 
     /**
      * Gets the session's ID
@@ -47,52 +34,16 @@ public class Favourite {
      * @return String representing the session ID
      */
     @NonNull
-    public String getSessionId() {
-        return sessionId;
+    public String getId() {
+        return id;
     }
 
     /**
      * Sets the session's ID
      *
-     * @param sessionId String representing the session ID
+     * @param id String representing the session ID
      */
-    public void setSessionId(@NonNull String sessionId) {
-        this.sessionId = sessionId;
-    }
-
-    /**
-     * Gets the speaker's ID
-     *
-     * @return String representing the speaker ID
-     */
-    public String getSpeakerId() {
-        return speakerId;
-    }
-
-    /**
-     * Sets the speaker's ID
-     *
-     * @param speakerId String representing the speaker ID
-     */
-    public void setSpeakerId(String speakerId) {
-        this.speakerId = speakerId;
-    }
-
-    /**
-     * Gets the location's ID
-     *
-     * @return String representing the location ID
-     */
-    public String getLocationId() {
-        return locationId;
-    }
-
-    /**
-     * Sets the location's ID
-     *
-     * @param locationId String representing the location ID
-     */
-    public void setLocationId(String locationId) {
-        this.locationId = locationId;
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 }

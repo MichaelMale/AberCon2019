@@ -10,6 +10,13 @@ import androidx.room.PrimaryKey;
 
 import uk.ac.aber.cs31620.abercon2019.model.datasource.util.ResourceUtil;
 
+/**
+ * Speaker.java - An object that represents a speaker. Paired with the speaker table in the
+ * database.
+ *
+ * @author Michael Male
+ * @version 1.0 2019-12-01
+ */
 @Entity(tableName = "speakers")
 public class Speaker {
 
@@ -21,6 +28,14 @@ public class Speaker {
     private String biography;
     private String twitter;
 
+    /**
+     * Constructor for objects of type Speaker.
+     *
+     * @param id        Primary key for the speakers record.
+     * @param name      Name of the speaker.
+     * @param biography Details about the speaker.
+     * @param twitter   Twitter handle for the speaker.
+     */
     public Speaker(String id, String name, String biography, String twitter) {
         this.id = id;
         this.name = name;

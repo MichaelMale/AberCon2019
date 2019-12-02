@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
  * an inner class.
  *
  * @author Michael Male
- * @version 1.0 PRODUCTION
+ * @version 1.0 2019-12-01
  * @see AsyncTask
  */
 public class ResourceUtil {

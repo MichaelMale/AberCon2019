@@ -20,6 +20,7 @@ import uk.ac.aber.cs31620.abercon2019.ui.home.HomeFragment;
  * The MainActivity method. This method controls the main part of the app and manages fragments.
  *
  * @author Michael Male
+ * @version 1.0 2019-11-29
  */
 public class MainActivity extends AppCompatActivity {
     /**

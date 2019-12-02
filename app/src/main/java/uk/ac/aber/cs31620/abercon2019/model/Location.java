@@ -4,6 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+/**
+ * Location.java - Represents a location. It is paired with the locations table in the database.
+ *
+ * @author Michael Male
+ * @version 1.0 2019-11-27
+ */
 @Entity(tableName = "locations")
 public class Location {
 
@@ -16,6 +22,15 @@ public class Location {
     private double longitude;
     private String description;
 
+    /**
+     * Constructor for objects of type Location.
+     *
+     * @param id          a non-null primary key representing the location ID.
+     * @param name        String representing the location's name.
+     * @param latitude    double representing the latitude of the location.
+     * @param longitude   double representing the longitude of the location.
+     * @param description Sting representing a description of the location.
+     */
     public Location(@NonNull String id, String name, double latitude, double longitude,
                     String description) {
         this.id = id;
@@ -24,6 +39,7 @@ public class Location {
         this.longitude = longitude;
         this.description = description;
     }
+
 
     public String getId() {
         return id;
